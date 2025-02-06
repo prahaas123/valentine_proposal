@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kavya's Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-md p-6 bg-white shadow-lg rounded-2xl">
+        <div id="quiz-container">
+            <h1 class="text-2xl font-bold text-center mb-4">Kavya's Quiz</h1>
+            <div id="quiz-content">
+                <p id="question-text" class="font-medium text-black"></p>
+                <div class="flex gap-2 mt-2">
+                    <input id="user-answer" type="text" class="flex-1 border p-2 rounded" placeholder="Your answer..." />
+                    <button id="submit-btn" class="bg-blue-500 text-white p-2 rounded">Submit</button>
+                </div>
+                <p id="message" class="mt-2 text-center text-lg font-semibold"></p>
+            </div>
+            <div id="qr-container" class="hidden mt-6 text-center">
+                <p class="font-semibold text-lg mb-2">You got them all right! Now scan this QR code to read the message.</p>
+                <img src="your-qr-code.png" alt="Playlist QR Code" class="mx-auto w-40" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Question data
+        const questions = [
+            { question: "Where did we first start talking?", answer: "instagram" },
+            { question: "What’s my favorite type of music?", answer: "rock" },
+            { question: "What’s our inside joke about?", answer: "pineapples" },
+            { question: "What’s my favorite movie?", answer: "inception" },
+        ];
+
+        let currentQuestion = 0;
+        let userAnswer = "";
+        let showQR = false;
+
+        const questionText = document.getElementById("question-text");
+        const userAnswerInput = document.getElementById("user-answer");
+        const submitBtn = document.getElementById("submit-btn");
+        const messageElement = document.getElementById("message");
+        const quizContent = document.getElementById("quiz-content");
+        const qrContainer = document.getElementById("qr-container");
+
+        function displayQuestion() {
+            questionText.textContent = questions[currentQuestion].question;
+            userAnswerInput.value = "";
+            messageElement.textContent = "";
+        }
+
+        function handleChange(e) {
+            userAnswer = e.target.value.toLowerCase();
+        }
+
+        function checkAnswer() {
+            if (userAnswer === questions[currentQuestion].answer) {
+                if (currentQuestion + 1 < questions.length) {
+                    messageElement.textContent = "Correct! Onto the next question...";
+                    setTimeout(() => {
+                        currentQuestion++;
+                        displayQuestion();
+                    }, 1500);
+                } else {
+                    showQR = true;
+                    quizContent.classList.add("hidden");
+                    qrContainer.classList.remove("hidden");
+                }
+            } else {
+                messageElement.textContent = "Try again!";
+            }
+        }
+
+        // Event listeners
+        userAnswerInput.addEventListener("input", handleChange);
+        submitBtn.addEventListener("click", checkAnswer);
+
+        // Initialize quiz
+        displayQuestion();
+    </script>
+
+</body>
+
+</html>
